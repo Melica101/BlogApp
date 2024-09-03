@@ -1,0 +1,13 @@
+header {
+  background-color: #f8f9fa; /* Light gray background */
+}
+
+span {
+  font-weight: bold;
+}
+
+img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}

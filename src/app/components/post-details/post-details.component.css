@@ -1,0 +1,31 @@
+.container {
+  max-width: 800px;
+}
+
+h2 {
+  font-weight: bold;
+}
+
+.media img {
+  width: 64px;
+  height: 64px;
+}
+
+.media-body h5 {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.pagination {
+  margin-top: 20px;
+}
+
+.page-item.disabled .page-link {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.5;
+}

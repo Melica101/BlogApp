@@ -1,0 +1,36 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Posts</h2>
+    <div class="d-flex align-items-center">
+      <button class="btn btn-primary">New post</button>
+    </div>
+  </div>
+  @for (post of posts; track post.id) {
+  <div class="media mb-4 p-3 border rounded">
+    <img src="https://via.placeholder.com/64" alt="Post Image" class="mr-3">
+    <div class="media-body">
+      <h5 class="mt-0">{{ post.title }} | {{ post.author }}</h5>
+      <p>{{ post.body }}</p>
+    </div>
+  </div>
+  }
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" href="#" aria-label="Previous" (click)="onPageChange(currentPage - 1)">
+          <span aria-hidden="true">&laquo; Prev</span>
+        </a>
+      </li>
+      @for (page of [].constructor(totalPages); track page.id; let i = $index) {
+      <li class="page-item" [class.active]="currentPage === i + 1">
+        <a class="page-link" href="#" (click)="onPageChange(i + 1)">{{ i + 1 }}</a>
+      </li>
+      }
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" href="#" aria-label="Next" (click)="onPageChange(currentPage + 1)">
+          <span aria-hidden="true">Next &raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
