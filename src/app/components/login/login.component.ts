@@ -24,12 +24,12 @@ export class LoginComponent {
 
   onLogin() {
     this.authService.login(this.username, this.password).subscribe(
-      (response: { token: string; }) => {
-        localStorage.setItem('token', response.token); // Save token in local storage
-        this.router.navigate(['/posts']);
+      (response) => {
+        this.authService.setToken(response.token, this.username); // Save the token
+        this.router.navigate(['/posts']);          // Redirect to posts
       },
-      () => {
-        alert('Login failed. Please check your credentials.');
+      (error) => {
+        alert('Invalid login credentials');
       }
     );
   }

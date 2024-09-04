@@ -1,43 +1,44 @@
+<!-- Post details -->
 <div class="container mt-4">
-  <h2 class="mb-3">{{ post!.title }}</h2>
-  <p class="text-muted">by {{ post!.author }}</p>
-
-  <div class="media mb-4 p-3 border rounded">
-    <img src="https://via.placeholder.com/128" alt="Post Image" class="mr-3">
-    <div class="media-body">
-      <p>{{ post!.body }}</p>
-    </div>
-  </div>
+  <h2 class="mb-3">{{ post?.title }}</h2>
+  <p class="text-muted">by {{ post?.author }}</p>
+  <p>{{ post?.body }}</p>
 
   <hr>
 
-  <h4>Comments</h4>
-  @for (comment of post!.comments; track comment.author) {
-
-  <div class="media mb-4 p-3 border rounded">
-    <img src="https://via.placeholder.com/64" alt="Author Image" class="mr-3">
-    <div class="media-body">
-      <h5 class="mt-0">{{ comment.author }}</h5>
-      <p>{{ comment.body }}</p>
+  <!-- Comments Section -->
+  <h4>Comments ({{ totalCommentsCount }})</h4>
+  <div *ngFor="let comment of comments">
+    <div class="media mb-4 p-3 border rounded">
+      <img src="https://via.placeholder.com/64" alt="Author Image" class="mr-3">
+      <div class="media-body">
+        <h5 class="mt-0">{{ comment.author }}</h5>
+        <p>{{ comment.body }}</p>
+      </div>
     </div>
   </div>
-  }
+
+  <div *ngIf="comments.length === 0">
+    <p>No comments available.</p>
+  </div>
+
+  <!-- Pagination controls -->
   <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center">
-      <li class="page-item"><a class="page-link" href="#">
-          << Prev</a>
+      <li class="page-item" [class.disabled]="page === 1">
+        <button class="page-link" (click)="previousPage()" [disabled]="page === 1"><< Prev</button>
       </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item"><a class="page-link" href="#">4</a></li>
-      <li class="page-item"><a class="page-link" href="#">5</a></li>
-      <li class="page-item"><a class="page-link" href="#">Next >></a></li>
+      <li class="page-item" *ngFor="let p of totalPages; let i = index" [class.active]="page === i + 1">
+        <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="(page * pageSize) >= totalCommentsCount">
+        <button class="page-link" (click)="nextPage()" [disabled]="(page * pageSize) >= totalCommentsCount">Next >></button>
+      </li>
     </ul>
   </nav>
-
   <hr>
 
+  <!-- Add Comment Form -->
   <h4>Add a comment</h4>
   <form (ngSubmit)="addComment()">
     <div class="mb-3">

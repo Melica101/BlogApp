@@ -1,8 +1,9 @@
 <header>
   <div class="d-flex justify-content-end align-items-center p-3">
     <div class="d-flex align-items-center">
-      <span class="mr-2">Welcome, {{ username }}</span>
+      <span class="mr-2">Welcome, {{ username || 'Guest' }}</span> <!-- Show 'Guest' if no username -->
       <img src="https://via.placeholder.com/40" alt="Avatar" class="rounded-circle">
+      <button class="btn btn-link ml-3" (click)="logout()">Logout</button> <!-- Logout button -->
     </div>
   </div>
   <hr>

@@ -5,5 +5,6 @@ export interface Post {
   title: string;
   body: string;
   author: string;
+  totalCommentsCount: number;
   comments: Comment[];
 }

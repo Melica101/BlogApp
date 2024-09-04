@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { LoginComponent } from "./components/login/login.component";
 import { HeaderComponent } from "./components/header/header.component";
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -12,4 +13,10 @@ import { HeaderComponent } from "./components/header/header.component";
 })
 export class AppComponent {
   title = 'BlogApp';
+  constructor(public authService: AuthService, private router: Router) {}
+
+  // Determine if the header should be displayed (hide it on the login page)
+  shouldShowHeader(): boolean {
+    return this.router.url !== '/login' && this.authService.getToken() !== null;
+  }
 }

@@ -5,18 +5,22 @@ import { CommentService } from '../../services/comment.service';
 import { PostService } from '../../services/post.service';
 import { Post } from '../../models/post';
 import { Comment } from '../../models/comment';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-post-details',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './post-details.component.html',
   styleUrl: './post-details.component.css'
 })
 export class PostDetailsComponent {
-  post: Post | undefined;
-  comments: Comment[] = [];
+  post: Post | undefined;  // Post data, including comments
+  comments: Comment[] = [];  // To store the paginated comments
   newComment: string = '';
+  page: number = 1;  // Current page
+  pageSize: number = 5;  // Number of comments per page
+  totalCommentsCount: number = 0;  // Total number of comments
 
   constructor(
     private route: ActivatedRoute,
@@ -26,46 +30,67 @@ export class PostDetailsComponent {
 
   ngOnInit(): void {
     const postId = +this.route.snapshot.paramMap.get('id')!;
-    this.loadPost(postId);
-    this.loadComments(postId);
+    this.loadPost(postId);  // Load post and comments when the component is initialized
   }
 
+  // Fetch the post data including paginated comments from the server
   loadPost(postId: number): void {
-    this.postService.getPost(postId).subscribe(
+    this.postService.getPost(postId, this.page, this.pageSize).subscribe(
       (data) => {
-        this.post = data;
+        this.post = data;  // Assign the post data to the component
+        this.comments = data.comments;  // Assign paginated comments
+        this.totalCommentsCount = data.totalCommentsCount;  // Get total comments count from the response
       },
       (error) => {
-        console.error('Error fetching post', error);
+        console.error('Error fetching post', error);  // Log error if any
       }
     );
   }
 
-  loadComments(postId: number): void {
-    this.commentService.getComments(postId).subscribe(
-      (data) => {
-        this.comments = data;
-      },
-      (error) => {
-        console.error('Error fetching comments', error);
-      }
-    );
+  // Method to calculate total pages based on the total number of comments and page size
+  get totalPages(): number[] {
+    const total = Math.ceil(this.totalCommentsCount / this.pageSize);  // Calculate total number of pages
+    return Array.from({ length: total }, (_, i) => i + 1);  // Generate an array [1, 2, ..., total]
   }
 
+  // Add a new comment to the post
   addComment(): void {
     const postId = +this.route.snapshot.paramMap.get('id')!;
     if (this.newComment) {
       this.commentService.addComment(postId, this.newComment).subscribe(
-        (data) => {
-          this.comments.push(data);
-          this.newComment = '';
+        (comment) => {
+          this.comments.push(comment);  // Add the new comment to the comments array
+          this.newComment = '';  // Clear the input field after adding the comment
+          this.loadPost(postId);  // Reload the post to get updated paginated comments
         },
         (error) => {
-          console.error('Error adding comment', error);
+          console.error('Error adding comment', error);  // Log error if adding comment fails
         }
       );
     } else {
       alert('Please enter a comment.');
     }
+  }
+
+  // Navigate to the next page of comments
+  nextPage(): void {
+    if (this.page * this.pageSize < this.totalCommentsCount) {
+      this.page++;
+      this.loadPost(+this.route.snapshot.paramMap.get('id')!);  // Load next page of comments
+    }
+  }
+
+  // Navigate to the previous page of comments
+  previousPage(): void {
+    if (this.page > 1) {
+      this.page--;
+      this.loadPost(+this.route.snapshot.paramMap.get('id')!);  // Load previous page of comments
+    }
+  }
+
+  // Navigate to a specific page
+  goToPage(pageNumber: number): void {
+    this.page = pageNumber;
+    this.loadPost(+this.route.snapshot.paramMap.get('id')!);  // Load comments for the specified page
   }
 }
