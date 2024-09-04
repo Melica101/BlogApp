@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Comment } from '../models/comment';
 import { AuthService } from './auth.service';
 
@@ -25,7 +25,9 @@ export class CommentService {
       .set('pageSize', pageSize.toString());
 
     // Fetch comments with pagination for a specific post
-    return this.http.get<any>(`${this.apiUrl}/${postId}/comments`, { headers, params });
+    return this.http.get<any>(`${this.apiUrl}/${postId}/comments`, { headers, params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Add a new comment to a specific post
@@ -40,6 +42,20 @@ export class CommentService {
     const body = { body: commentBody };
 
     // Send POST request to add a new comment
-    return this.http.post<Comment>(`${this.apiUrl}/${postId}/comments`, body, { headers });
+    return this.http.post<Comment>(`${this.apiUrl}/${postId}/comments`, body, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(errorMessage);
   }
 }

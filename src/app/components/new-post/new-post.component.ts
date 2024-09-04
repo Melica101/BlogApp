@@ -15,6 +15,7 @@ export class NewPostComponent {
 
   title: string = '';
   body: string = '';
+  errorMessage: string | null = null;
 
   constructor(private postService: PostService, private router: Router) {}
 
@@ -25,12 +26,12 @@ export class NewPostComponent {
           this.router.navigate(['/posts']);
         },
         (error) => {
-          console.error('Error adding post', error);
+          this.errorMessage = "An error occurred while adding the post.";
         }
       );
     } else {
       alert('Please fill out all fields.');
     }
   }
-  
+
 }

@@ -13,4 +13,7 @@
 
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
+  @if (errorMessage) {
+  <p class="text-danger mt-3">{{ errorMessage }}</p>
+  }
 </div>

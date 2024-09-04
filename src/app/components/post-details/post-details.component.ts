@@ -21,6 +21,8 @@ export class PostDetailsComponent {
   page: number = 1;  // Current page
   pageSize: number = 5;  // Number of comments per page
   totalCommentsCount: number = 0;  // Total number of comments
+  errorMessage: string | null = null;  // Error message holder
+  loading: boolean = true;  // Loader indicator
 
   constructor(
     private route: ActivatedRoute,
@@ -39,10 +41,12 @@ export class PostDetailsComponent {
       (data) => {
         this.post = data;  // Assign the post data to the component
         this.comments = data.comments;  // Assign paginated comments
-        this.totalCommentsCount = data.totalCommentsCount;  // Get total comments count from the response
+        this.totalCommentsCount = data.totalCommentsCount; // Get total comments count from the response
+        this.loading = false;
       },
       (error) => {
-        console.error('Error fetching post', error);  // Log error if any
+        this.errorMessage = "An error occurred while loading the post.";
+        this.loading = false;
       }
     );
   }
@@ -64,7 +68,7 @@ export class PostDetailsComponent {
           this.loadPost(postId);  // Reload the post to get updated paginated comments
         },
         (error) => {
-          console.error('Error adding comment', error);  // Log error if adding comment fails
+          this.errorMessage = "An error occurred while adding the comment.";
         }
       );
     } else {

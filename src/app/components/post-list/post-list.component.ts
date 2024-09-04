@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { PostService } from '../../services/post.service';
 import { Post } from '../../models/post';
 import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })
@@ -16,6 +17,8 @@ export class PostListComponent {
   currentPage = 1;
   totalPages = 0;
   pageSize = 5;
+  errorMessage: string | null = null;
+  loading: boolean = true;
 
   constructor(private postService: PostService) {}
 
@@ -28,9 +31,11 @@ export class PostListComponent {
       (data) => {
         this.posts = data.posts;
         this.totalPages = Math.ceil(data.totalCount / this.pageSize);
+        this.loading = false;
       },
       (error) => {
-        console.error('Error fetching posts', error);
+        this.errorMessage = "An error occurred while loading the posts.";
+        this.loading = false;
       }
     );
   }

@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Post } from '../models/post';
 import { AuthService } from './auth.service';
 
@@ -19,7 +19,9 @@ export class PostService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<{ totalCount: number, posts: Post[] }>(`${this.apiUrl}?page=${page}&pageSize=${pageSize}`, { headers });
+    return this.http.get<{ totalCount: number, posts: Post[] }>(`${this.apiUrl}?page=${page}&pageSize=${pageSize}`, { headers }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   getPost(postId: number, page: number = 1, pageSize: number = 10): Observable<Post> {
@@ -33,7 +35,9 @@ export class PostService {
       .set('pageSize', pageSize.toString());
 
     // Return the post with paginated comments
-    return this.http.get<Post>(`${this.apiUrl}/${postId}`, { headers, params });
+    return this.http.get<Post>(`${this.apiUrl}/${postId}`, { headers, params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   addPost(title: string, body: string): Observable<Post> {
@@ -42,6 +46,20 @@ export class PostService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post<Post>(this.apiUrl, { title, body }, { headers });
+    return this.http.post<Post>(this.apiUrl, { title, body }, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(errorMessage);
   }
 }
