@@ -19,9 +19,13 @@ export class HeaderComponent {
     this.username = this.authService.getUsername();
   }
 
-  // Log the user out and redirect to the login page
+  getInitials(user: string | null): string {
+    if (!user || user.length === 0) return '';
+    return user.charAt(0).toUpperCase();
+  }
+
   logout(): void {
     this.authService.logout();  // Clear the token and username
-    this.router.navigate(['/login']);  // Redirect to the login page
+    this.router.navigate(['/login']);
   }
 }

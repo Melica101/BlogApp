@@ -11,7 +11,7 @@ export class LoginGuard implements CanActivate {
   canActivate(): boolean {
     if (this.authService.getToken()) {
       // User is already logged in, redirect to a different page
-      this.router.navigate(['/posts']);  // Redirect to the posts page (or any other page)
+      this.router.navigate(['/posts']);  // Redirect to the posts page
       return false;
     } else {
       return true;  // User is not logged in, allow access to the login page

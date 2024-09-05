@@ -1,3 +1,20 @@
 .media {
-cursor: pointer;
+  cursor: pointer;
+}
+
+h6 {
+  font-weight: 500;
+}
+
+.truncate-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+nav {
+  padding-bottom: 20px;
 }

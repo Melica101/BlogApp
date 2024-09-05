@@ -32,16 +32,12 @@ export class CommentService {
 
   // Add a new comment to a specific post
   addComment(postId: number, commentBody: string): Observable<Comment> {
-    const token = this.authService.getToken();  // Retrieve the token from AuthService
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,  // Set the Authorization header
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-
-    // Prepare the comment body
     const body = { body: commentBody };
-
-    // Send POST request to add a new comment
     return this.http.post<Comment>(`${this.apiUrl}/${postId}/comments`, body, { headers }).pipe(
       catchError(this.handleError)
     );

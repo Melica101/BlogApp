@@ -1,14 +1,18 @@
+<!-- New Post Page -->
+
 <div class="container mt-4">
-  <h2 class="mb-4">New Post</h2>
+  <h4 class="mb-4">New Post</h4>
   <form (ngSubmit)="onSubmit()">
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
-      <input type="text" id="title" class="form-control" [(ngModel)]="title" name="title" required>
+      <input placeholder="Title" type="text" id="title" class="form-control" [(ngModel)]="title" name="title" required>
     </div>
 
     <div class="mb-3">
       <label for="body" class="form-label">Body</label>
-      <textarea id="body" class="form-control" [(ngModel)]="body" name="body" rows="8" required></textarea>
+      <textarea
+        placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed ultrices dui. Pellentesque vel arcu in dui dapibus maximus quis vel ex. Vestibulum vitae eleifend massa. Donec rhoncus, neque eu blandit ullamcorper, massa ante pretium neque, eu fermentum nulla orci sit amet diam."
+        id="body" class="form-control" [(ngModel)]="body" name="body" rows="8" required></textarea>
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>

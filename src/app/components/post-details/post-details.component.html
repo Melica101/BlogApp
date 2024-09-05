@@ -1,20 +1,26 @@
-<!-- Post details -->
+<!-- Post Details Page -->
+
 <div *ngIf="loading" class="spinner-border" role="status">
   <span class="sr-only">Loading...</span>
 </div>
 
 <div *ngIf="!loading && !errorMessage" class="container mt-4">
-  <h2 class="mb-3">{{ post?.title }}</h2>
+  <div class="d-flex justify-content-center align-items-center">
+    <img src="https://via.placeholder.com/150" alt="Post Image" class="mx-3">
+  </div>
+  <h4 class="mb-3">{{ post?.title }}</h4>
   <p class="text-muted">by {{ post?.author }}</p>
   <p>{{ post?.body }}</p>
 
   <hr>
 
   <!-- Comments Section -->
-  <h4>Comments ({{ totalCommentsCount }})</h4>
+  <h6>Comments ({{ totalCommentsCount }})</h6>
   <div *ngFor="let comment of comments">
-    <div class="media mb-4 p-3 border rounded">
-      <img src="https://via.placeholder.com/64" alt="Author Image" class="mr-3">
+    <div class="media mb-4 p-3 border rounded d-flex align-items-center">
+      <div class="avatar mx-3">
+        <span>{{ getInitials(comment.author) }}</span>
+      </div>
       <div class="media-body">
         <h5 class="mt-0">{{ comment.author }}</h5>
         <p>{{ comment.body }}</p>
@@ -30,23 +36,28 @@
   <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center">
       <li class="page-item" [class.disabled]="page === 1">
-        <button class="page-link" (click)="previousPage()" [disabled]="page === 1"><< Prev</button>
+        <button class="page-link" (click)="previousPage()" [disabled]="page === 1">
+          << Prev</button>
       </li>
       <li class="page-item" *ngFor="let p of totalPages; let i = index" [class.active]="page === i + 1">
         <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
       </li>
       <li class="page-item" [class.disabled]="(page * pageSize) >= totalCommentsCount">
-        <button class="page-link" (click)="nextPage()" [disabled]="(page * pageSize) >= totalCommentsCount">Next >></button>
+        <button class="page-link" (click)="nextPage()" [disabled]="(page * pageSize) >= totalCommentsCount">Next
+          >></button>
       </li>
     </ul>
   </nav>
   <hr>
 
   <!-- Add Comment Form -->
-  <h4>Add a comment</h4>
+  <h6>Add a comment</h6>
   <form (ngSubmit)="addComment()">
     <div class="mb-3">
-      <textarea class="form-control" [(ngModel)]="newComment" name="commentBody" rows="3" required></textarea>
+      <label for="body" class="form-label">Body</label>
+      <textarea
+        placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed ultrices dui. Pellentesque vel arcu in dui dapibus maximus quis vel ex. Vestibulum vitae eleifend massa. Donec rhoncus, neque eu blandit ullamcorper"
+        class="form-control" [(ngModel)]="newComment" name="commentBody" rows="3" required></textarea>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>

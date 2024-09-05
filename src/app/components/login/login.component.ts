@@ -19,17 +19,20 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   username: string = '';
   password: string = '';
+  rememberMe: boolean = false;
+  errorMessage: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   onLogin() {
-    this.authService.login(this.username, this.password).subscribe(
+    this.authService.login(this.username, this.password, this.rememberMe).subscribe(
       (response) => {
-        this.authService.setToken(response.token, this.username); // Save the token
-        this.router.navigate(['/posts']);          // Redirect to posts
+        const token = response.token;
+        this.authService.setToken(token, this.username, this.rememberMe);
+        this.router.navigate(['/posts']);  // Redirect after successful login
       },
       (error) => {
-        alert('Invalid login credentials');
+        this.errorMessage = 'Login failed: Invalid credentials';
       }
     );
   }

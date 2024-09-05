@@ -14,7 +14,7 @@ export class PostService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   getPosts(page: number, pageSize: number): Observable<{ totalCount: number, posts: Post[] }> {
-    const token = this.authService.getToken(); // Retrieve the token
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
@@ -25,16 +25,15 @@ export class PostService {
   }
 
   getPost(postId: number, page: number = 1, pageSize: number = 10): Observable<Post> {
-    const token = this.authService.getToken(); // Retrieve the token from AuthService
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}` // Set the Authorization header
+      'Authorization': `Bearer ${token}`
     });
 
     const params = new HttpParams()
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
 
-    // Return the post with paginated comments
     return this.http.get<Post>(`${this.apiUrl}/${postId}`, { headers, params }).pipe(
       catchError(this.handleError)
     );

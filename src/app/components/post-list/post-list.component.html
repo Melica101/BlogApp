@@ -1,12 +1,16 @@
+<!-- All Posts Page -->
+
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Posts</h2>
+    <h3>Posts</h3>
     <div class="d-flex align-items-center">
       <button class="btn btn-primary" [routerLink]="['/new-post']">New post</button>
     </div>
   </div>
-  <div *ngIf="loading" class="spinner-border" role="status">
-    <span class="sr-only">Loading...</span>
+  <div *ngIf="loading" class="d-flex justify-content-center align-items-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only px-2">Loading...</span>
+    </div>
   </div>
   <div *ngIf="!loading && !errorMessage">
     <div *ngIf="posts.length === 0">
@@ -14,11 +18,11 @@
     </div>
     <div *ngIf="posts.length > 0">
       @for (post of posts; track post.id) {
-      <div class="media mb-4 p-3 border rounded" [routerLink]="['/posts/'+ post.id]">
-        <img src="https://via.placeholder.com/64" alt="Post Image" class="mr-3">
+      <div class="media mb-4 py-3 pr-4 border rounded d-flex align-items-center" [routerLink]="['/posts/'+ post.id]">
+        <img src="https://via.placeholder.com/81" alt="Post Image" class="mx-3">
         <div class="media-body">
-          <h5 class="mt-0">{{ post.title }} | {{ post.author }}</h5>
-          <p>{{ post.body }}</p>
+          <h6 class="mt-0">{{ post.title }} | {{ post.author }}</h6>
+          <p class="truncate-text">{{ post.body }}</p>
         </div>
       </div>
       }

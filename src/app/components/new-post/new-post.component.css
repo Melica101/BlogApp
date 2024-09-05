@@ -1,13 +1,9 @@
 .container {
-  max-width: 800px;
+  max-width: 1000px;
 }
 
-h2 {
-  font-weight: bold;
-}
-
-.form-label {
-  font-weight: bold;
+h4 {
+  font-weight: 500;
 }
 
 textarea {

@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,15 +11,14 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:5000/api/auth/login';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private cookieService: CookieService) { }
 
-  login(username: string, password: string): Observable<any> {
+  login(username: string, password: string, rememberMe: boolean): Observable<any> {
     return this.http.post<any>(this.apiUrl, { username, password }).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Handle errors globally
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
     if (error.error instanceof ErrorEvent) {
@@ -26,30 +26,37 @@ export class AuthService {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       // Server-side error
-      errorMessage = `Error Code: ${error.status} \n Message: ${error.message}`;
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     return throwError(errorMessage);
   }
 
-  // Store token and username in localStorage
-  setToken(token: string, username: string): void {
-    localStorage.setItem('token', token);
-    localStorage.setItem('username', username);  // Store the username as well
+  setToken(token: string, username: string, rememberMe: boolean): void {
+    if (rememberMe) {
+      // Store token and username in cookies if "Remember Me" is checked
+      this.cookieService.set('token', token, 7);  // 7 days expiry
+      this.cookieService.set('username', username, 7);
+    } else {
+      // Store token and username in localStorage for session-based storage
+      localStorage.setItem('token', token);
+      localStorage.setItem('username', username);
+    }
   }
 
-  // Retrieve token from localStorage
   getToken(): string | null {
-    return localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    return token ? token : this.cookieService.get('token');
   }
 
-  // Retrieve the logged-in username from localStorage
   getUsername(): string | null {
-    return localStorage.getItem('username');
+    const username = localStorage.getItem('username');
+    return username ? username : this.cookieService.get('username');
   }
 
-  // Clear token and username from localStorage
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
+    this.cookieService.delete('token');
+    this.cookieService.delete('username');
   }
 }

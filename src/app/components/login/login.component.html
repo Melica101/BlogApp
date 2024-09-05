@@ -1,6 +1,8 @@
+<!-- Login Page -->
+
 <div class="container h-100 d-flex justify-content-center align-items-center">
   <div class="card p-4" style="width: 500px;">
-    <h4 class="card-title text-center">Login</h4>
+    <h4 class="card-title text-center"><strong>Login</strong></h4>
     <form (ngSubmit)="onLogin()">
       <div class="mb-3">
         <label for="username" class="form-label">User Name:</label>
@@ -10,7 +12,14 @@
         <label for="password" class="form-label">Password:</label>
         <input type="password" id="password" class="form-control" [(ngModel)]="password" name="password" required>
       </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" class="form-check-input" id="rememberMe">
+        <label class="form-check-label" for="rememberMe">Remember Me</label>
+      </div>
       <button type="submit" class="btn btn-primary w-100">Login</button>
     </form>
+    <div *ngIf="errorMessage" class="text-danger mt-3">
+      {{ errorMessage }}
+    </div>
   </div>
 </div>

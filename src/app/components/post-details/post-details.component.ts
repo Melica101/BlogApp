@@ -35,6 +35,11 @@ export class PostDetailsComponent {
     this.loadPost(postId);  // Load post and comments when the component is initialized
   }
 
+  getInitials(author: string): string {
+    if (!author || author.length === 0) return '';
+    return author.charAt(0).toUpperCase();  // Return the first letter of the author's name
+  }
+
   // Fetch the post data including paginated comments from the server
   loadPost(postId: number): void {
     this.postService.getPost(postId, this.page, this.pageSize).subscribe(

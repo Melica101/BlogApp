@@ -1,10 +1,11 @@
 <header>
   <div class="d-flex justify-content-end align-items-center p-3">
     <div class="d-flex align-items-center">
-      <span class="mr-2">Welcome, {{ username || 'Guest' }}</span> <!-- Show 'Guest' if no username -->
-      <img src="https://via.placeholder.com/40" alt="Avatar" class="rounded-circle">
-      <button class="btn btn-link ml-3" (click)="logout()">Logout</button> <!-- Logout button -->
+      <span class="mx-2">Welcome, {{ username}}</span>
+      <div class="avatar">
+        <span>{{ getInitials(username) }}</span>
+      </div>
     </div>
+    <button class="btn btn-primary mx-4" (click)="logout()">Logout</button>
   </div>
-  <hr>
 </header>
